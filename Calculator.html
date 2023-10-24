@@ -1,22 +1,24 @@
 <!DOCTYPE html>
+
 <html>
     <head lang="en">
         <meta charset="utf-8" />
         <title>Loan Calculator</title>
+        <script src="Calculator.js" defer></script>
         <style>
             .container {
                 border-style: solid;
-                margin-right: 35%;
-                margin-left: 35%;
+                margin-right: 30%;
+                margin-left: 30%;
                 margin-top: 5%;
                 background-color:floralwhite;
             }
             h1 {
-                margin-left: 28%;
+                text-align: center;
                 color: chocolate;
             }
             .form-row {
-                padding: 15px;
+                padding: 15px; /*10px also looks good*/
                 margin-left: 15%;
             }
             .form-row label {
@@ -24,6 +26,12 @@
                 display:inline-block;
                 width: 40%;
                 color: chocolate;
+            }
+            .form-row select {
+                width: 120px;
+                border-radius: 5px;	
+                padding: 5px;
+                border-color: gainsboro;
             }
             .btn-container {
                 margin-left: 35%;
@@ -40,32 +48,66 @@
             .btn-container input:hover {
 				background-color: chocolate;
             }
-            input [type=text] {
-                padding: 10px;
+            input[type=text] {
+				border-radius: 5px;		
+				font-size: 15px;
+				padding: 5px;
+                border-color: whitesmoke;
             }
+            .form-row input[type=range] {
+                 background-color: chocolate;
+            }
+            .block {
+                text-align: center;
+            }
+            .block label {
+                font-size: 20px;
+                color: chocolate;
+            }
+            .block-child {
+                display: inline-block;
+                padding: 20px;
+                margin-right: 30px;
+            }
+            .block output {
+                display:inline-block;
+                border-bottom: solid;
+                border-width: 3px;
+                border-color: chocolate;
+                width: 70%;
+                margin-top: 20px;
+                font-weight: bold; 
+                font-size: 20px;      
+            }
+            
         </style>
     </head>
     <body>
-        <form class="container">
+        <form class="container" id="form">
             <h1>Loan Calculator</h1>
             <div class="form-row">
-                <label>Loan Amount</label>
-                <input type="text" />
+                <label for="LoanAmount">Loan Amount</label>
+                <input type="text" id="LoanAmount">
             </div>
             <div class="form-row">
-                <label for="LoanTerm">Loan term</label>
-                <select name="LoanTerm" id="LoanTerm">
+                <label>Loan term</label>
+                <input type="text" id="LoanTerm" size="5px">
+                <select name="LoanTerm" id="LoanTermOpt">
+                    <option selected disabled>--Select--</option>
                     <option value="Years">Years</option>
                     <option value="Months">Months</option>
                 </select>
             </div>
             <div class="form-row">
                 <label>Annual Interest Rate</label>
-                <input type="range" min="0" max="24" />
+              <!--  <input type="text" id="IntRateValue" size="5px" /> -->
+                <input type="range" id="IntRate" min="0" max="24" />
+                <output id="IntRateValue"></output>
             </div>
             <div class="form-row">
-                <label for="Payment Frequency">Payment Frequency</label>
-                <select name="Payment Frequency" id="Payment Frequency">
+                <label>Payment Frequency</label>
+                <select name="Payment Frequency" id="PaymentFrequency">
+                    <option selected disabled>--Select--</option>
                     <option value="Weekly">Weekly</option>
                     <option value="Bi-weekly">Bi-weekly</option>
                     <option value="Semi-monthly">Semi-monthly</option>
@@ -78,5 +120,29 @@
                 <input type="reset" value="Reset" />
             </div>
         </form>   
+        <div class="container">
+            <h1>Loan Details</h1>
+            <div class="block">
+                <div class="block-child">
+                    <label for="MonthlyPayment">Monthly Payment</label>
+                    <output id="MonthlyPayment"></output>
+                </div>
+                <div class="block-child">
+                    <label for="TotalInterest">Total Interest</label>
+                    <output id="TotalInterest"></output>
+                </div>
+            </div>
+            <div class="block">
+                <div class="block-child">
+                    <label for="NumOfPayments">Number of Payments</label>
+                    <output id="NumOfPayments"></output>
+                </div>
+                <div class="block-child">
+                    <label for="TotalPayment">Total Payment</label>
+                    <output id="TotalPayment"></output>
+                </div>
+            </div>
+        </div>
+
     </body>
 </html>
