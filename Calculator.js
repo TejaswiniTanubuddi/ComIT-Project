@@ -1,86 +1,87 @@
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("form");
+  const selectLoanTermOpt = document.getElementById("LoanTermOpt");
+  const rngInterestRate = document.getElementById("IntRate");
+  const selectPaymentFrequency = document.getElementById("PaymentFrequency");
+
+  rngInterestRate.addEventListener("change", function () {
+    const x = rngInterestRate.value;
+    document.getElementById("IntRateValue").value = x;
+  });
+
+  selectLoanTermOpt.addEventListener("change", function () {
+    if (selectLoanTermOpt.value === "Months") {
+      const x = document.getElementById("PaymentFrequency");
+      x.remove(5);
+    }
+    else {
+      if (selectPaymentFrequency.options.length < 6) {
+        const annuallyOption = document.createElement("option");
+        annuallyOption.text = "Annually";
+        annuallyOption.value = "Annually";
+        selectPaymentFrequency.add(annuallyOption, 5);
+      }
+    }
+  });
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    const loan_amount = document.getElementById("LoanAmount").value;
-    const loan_term_value = document.getElementById("LoanTerm").value;
-    const loan_term_Opt = document.getElementById("LoanTermOpt");
-    const Interest_rate = document.getElementById("IntRate");
-    const payment_frequency = document.getElementById("PaymentFrequency");
-   
-    
-    Interest_rate.addEventListener("change", function() {
-      const x = Interest_rate.value;
-      console.log(x);
-      document.getElementById("IntRateValue").value = x;
-    });
+    const txtLoanAmountValue = document.getElementById("LoanAmount").value;
+    const txtLoanTermValue = document.getElementById("LoanTerm").value;
 
+    const numOfInterestsYearly = numofinterestsyearlyfn(selectLoanTermOpt, selectPaymentFrequency);
 
-    console.log(loan_term_Opt.value);
-    loan_term_Opt.addEventListener("change", function() {
-      console.log("inside if function");
-      if (loan_term_Opt.value == "Months") {
-        console.log('Inside the "Months" block');
-        const x = document.getElementById("PaymentFrequency");
-        x.remove(5);
-      }
-      else {
-        if (payment_frequency.options.length < 6) {
-          console.log("inside else function");
-          const annuallyOption = document.createElement("option");
-        annuallyOption.text = "Annually";
-        annuallyOption.value = "Annually";
-        payment_frequency.add(annuallyOption, 5);
-        }    
-      }
-    });
+    const n = numOfInterestsYearly * txtLoanTermValue; //numofpayments
+    const r = (rngInterestRate.value / 100) / numOfInterestsYearly; //periodic Interest Rate
 
+    const monthlyPayment = monthlypaymentfn(n, r, txtLoanAmountValue);
 
-    console.log("ouside function");
-   
-    if(loan_term_Opt.value == "Years") {
-      if (payment_frequency.value == "Weekly") {
-        numofinterestsyearly = 52;
-      } else if (payment_frequency.value == "Bi-weekly") {
-        numofinterestsyearly = 26;
-      } else if (payment_frequency.value == "Semi-monthly") {
-        numofinterestsyearly = 24;
-      } else if (payment_frequency.value == "Monthly") {
-        numofinterestsyearly = 12;
-      } else {
-        numofinterestsyearly = 1;
-      }
-    }
-    else {
-      if (payment_frequency.value == "Weekly") {
-        numofinterestsyearly = 4;
-      } else if (payment_frequency.value == "Bi-weekly") {
-        numofinterestsyearly = 2;
-      } else if (payment_frequency.value == "Semi-monthly") {
-        numofinterestsyearly = 2;
-      } else {
-        numofinterestsyearly = 1;
-      }
-    }
-      
-    n = numofinterestsyearly * loan_term_value; //numofpayments
-    console.log(n);
-    r = (Interest_rate.value/100) / numofinterestsyearly; //periodic Interest Rate
-    console.log(r);
-    exp = (1 + r)**n;
-    console.log(exp);
-    monthlypayment = (loan_amount * r * exp) / (exp - 1);
-    totalinterest = (monthlypayment * n) - loan_amount;
-    totalpayment = monthlypayment * n;
+    const totalInterest = (monthlyPayment * n) - txtLoanAmountValue;
+    const totalPayment = monthlyPayment * n;
 
-    document.getElementById("MonthlyPayment").textContent = Math.round(monthlypayment);
-    document.getElementById("TotalInterest").textContent = Math.round(totalinterest);
+    document.getElementById("MonthlyPayment").textContent = Math.round(monthlyPayment);
+    document.getElementById("TotalInterest").textContent = Math.round(totalInterest);
     document.getElementById("NumOfPayments").textContent = n;
-    document.getElementById("TotalPayment").textContent = Math.round(totalpayment);
+    document.getElementById("TotalPayment").textContent = Math.round(totalPayment);
   });
 });
+
+function numofinterestsyearlyfn(selectLoanTermOpt, selectPaymentFrequency) {
+  let numOfInterestsYearly = 0;
+  if (selectLoanTermOpt.value === "Years") {
+    if (selectPaymentFrequency.value === "Weekly") {
+      numOfInterestsYearly = 52;
+    } else if (selectPaymentFrequency.value === "Bi-weekly") {
+      numOfInterestsYearly = 26;
+    } else if (selectPaymentFrequency.value === "Semi-monthly") {
+      numOfInterestsYearly = 24;
+    } else if (selectPaymentFrequency.value === "Monthly") {
+      numOfInterestsYearly = 12;
+    } else {
+      numOfInterestsYearly = 1;
+    }
+  }
+  else {
+    if (selectPaymentFrequency.value === "Weekly") {
+      numOfInterestsYearly = 4;
+    } else if (selectPaymentFrequency.value === "Bi-weekly") {
+      numOfInterestsYearly = 2;
+    } else if (selectPaymentFrequency.value === "Semi-monthly") {
+      numOfInterestsYearly = 2;
+    } else {
+      numOfInterestsYearly = 1;
+    }
+  }
+  return numOfInterestsYearly;
+}
+
+function monthlypaymentfn(n, r, txtLoanAmountValue) {
+  let monthlyPayment = 0;
+  const exp = (1 + r) ** n;
+  monthlyPayment = (txtLoanAmountValue * r * exp) / (exp - 1);
+  return monthlyPayment;
+}
 
 
 
