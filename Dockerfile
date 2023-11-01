@@ -1,7 +1,7 @@
 FROM nginx:latest
 
-COPY Calculator.html /usr/share/nginx/html
-COPY Calculator.js /usr/share/nginx/html
+COPY Index.html /usr/share/nginx/html
+COPY Index.js /usr/share/nginx/html
 
 EXPOSE 80
 
